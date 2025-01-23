@@ -77,7 +77,4 @@ Feel free to customize the application by:
 - Integrate a backend to manage tasks across devices.
 - Add user authentication for personalized task lists.
 
-
----
-
 Happy task managing! 🚀
