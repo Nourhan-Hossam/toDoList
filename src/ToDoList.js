@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from "react";
 
 function ToDoList() {
   const [todos, setTodos] = useState([]);
+  const [filter, setFilter] = useState("all"); // Filter state: all, completed, uncompleted
   const inputRef = useRef();
 
   // Load tasks from local storage when the component mounts
@@ -12,7 +13,7 @@ function ToDoList() {
 
   // Save tasks to local storage whenever they change
   useEffect(() => {
-    if (todos.length) {
+    if (todos.length || localStorage.getItem("todos")) {
       localStorage.setItem("todos", JSON.stringify(todos));
     }
   }, [todos]);
@@ -39,6 +40,12 @@ function ToDoList() {
     setTodos(newTodo);
   };
 
+  const filteredTodos = todos.filter((todo) => {
+    if (filter === "completed") return todo.completed;
+    if (filter === "uncompleted") return !todo.completed;
+    return true; // "all" filter
+  });
+
   return (
     <div className="to-do-list">
       <h1>To Do List 📚</h1>
@@ -46,8 +53,30 @@ function ToDoList() {
       <button className="add-button" onClick={handelAddButton}>
         Add
       </button>
+
+      <div className="filters">
+        <button
+          className={filter === "all" ? "active" : ""}
+          onClick={() => setFilter("all")}
+        >
+          All
+        </button>
+        <button
+          className={filter === "completed" ? "active" : ""}
+          onClick={() => setFilter("completed")}
+        >
+          Completed
+        </button>
+        <button
+          className={filter === "uncompleted" ? "active" : ""}
+          onClick={() => setFilter("uncompleted")}
+        >
+          Uncompleted
+        </button>
+      </div>
+
       <ul>
-        {todos.map(({ text, completed }, index) => (
+        {filteredTodos.map(({ text, completed }, index) => (
           <li key={index}>
             <span className={completed ? "done" : ""}>{text}</span>
             <button
